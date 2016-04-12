@@ -8,9 +8,9 @@ public class Detail {
     private String latex;
     private String description;
 
-    public Detail(String latex, String description) {
-        this.latex = latex;
+    public Detail(String description, String latex) {
         this.description = description;
+        this.latex = latex;
     }
 
     public String getLatex() {

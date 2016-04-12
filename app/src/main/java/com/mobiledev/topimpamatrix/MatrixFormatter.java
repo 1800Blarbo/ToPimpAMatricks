@@ -43,7 +43,7 @@ public class MatrixFormatter {
                 string += "; ";
             }
         }
-        return string+")$$";
+        return makeLatexString(string+")");
     }
 
     public static String complexMatrixToString(ComplexDoubleMatrix matrix) {

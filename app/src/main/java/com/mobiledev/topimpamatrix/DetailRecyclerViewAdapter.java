@@ -4,7 +4,8 @@ import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.ImageView;
+import android.webkit.WebSettings;
+import android.webkit.WebView;
 import android.widget.TextView;
 
 import butterknife.Bind;
@@ -39,7 +40,11 @@ public class DetailRecyclerViewAdapter extends RecyclerView.Adapter<DetailRecycl
         final Detail detail = mDetails[position];
 
         holder.mTextView.setText(detail.getDescription());
-        //holder.mWebView.setText(detail.getDescription()); // do fancy javascript latex stuff here
+        WebSettings webSettings = holder.mWebView.getSettings();
+        webSettings.setJavaScriptEnabled(true);
+        String js = MatrixFormatter.makeLatexString(detail.getLatex());
+        holder.mWebView.loadDataWithBaseURL("file:///android_asset/", js, "text/html", "UTF-8", null);
+
 
         holder.mItemView.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -60,13 +65,18 @@ public class DetailRecyclerViewAdapter extends RecyclerView.Adapter<DetailRecycl
         TextView mTextView;
 
         @Bind(R.id.detail_row_webview)
-        ImageView mWebView;
+        WebView mWebView;
 
         public View mItemView;
 
         public DetailViewHolder(View itemView) {
             super(itemView);
-            ButterKnife.bind(this, itemView);
+            //ButterKnife.bind(this, itemView); // I THINK THIS IS BAD
+            try {
+                ButterKnife.bind(this, itemView);
+            } catch (Exception e) {
+                e.printStackTrace();
+            }
             this.mItemView = itemView;
         }
     }

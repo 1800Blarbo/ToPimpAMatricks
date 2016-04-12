@@ -50,14 +50,14 @@ public class DetailActivity extends AppCompatActivity {
     private String mImageFullPathAndName = "";
     private Intent intent;
 
+    private Detail[] mDetails;
+    private DetailRecyclerViewAdapter mAdapter;
+
     @Bind(R.id.activity_main_camera_image)
     ImageView mCameraImage;
 
     @Bind(R.id.web_view_math_test)
     WebView mWebView;
-
-    private Detail[] mDetails;
-    private DetailRecyclerViewAdapter mAdapter;
 
     @Bind(R.id.detail_recycler)
     RecyclerView mRecyclerView;
@@ -73,7 +73,7 @@ public class DetailActivity extends AppCompatActivity {
 
         ButterKnife.bind(this);
 
-        double[][] array = new double[][] {{1, 0, 0}, {0, 1, 0}, {0, 0, 1}};
+        double[][] array = new double[][] {{1, 2}, {3, 4}};
         DoubleMatrix matrix = new DoubleMatrix(array);
         showMatrix(matrix);
 
@@ -97,7 +97,7 @@ public class DetailActivity extends AppCompatActivity {
     public void showMatrix(DoubleMatrix matrix) {
         WebSettings webSettings = mWebView.getSettings();
         webSettings.setJavaScriptEnabled(true);
-        String js = MatrixFormatter.makeLatexString(MatrixFormatter.matrixToString(matrix));
+        String js = MatrixFormatter.matrixToString(matrix);
         mWebView.loadDataWithBaseURL("file:///android_asset/", js, "text/html", "UTF-8", null);
     }
 
