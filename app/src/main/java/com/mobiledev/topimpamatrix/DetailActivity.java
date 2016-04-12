@@ -8,11 +8,15 @@ import android.os.Bundle;
 import android.os.Environment;
 import android.provider.MediaStore;
 import android.support.v7.app.AppCompatActivity;
+import android.support.v7.widget.LinearLayoutManager;
+import android.support.v7.widget.RecyclerView;
 import android.util.Log;
 import android.view.View;
 import android.webkit.WebSettings;
 import android.webkit.WebView;
 import android.widget.ImageView;
+
+import org.jblas.DoubleMatrix;
 
 import java.io.File;
 import java.io.FileNotFoundException;
@@ -52,6 +56,12 @@ public class DetailActivity extends AppCompatActivity {
     @Bind(R.id.web_view_math_test)
     WebView mWebView;
 
+    private Detail[] mDetails;
+    private DetailRecyclerViewAdapter mAdapter;
+
+    @Bind(R.id.detail_recycler)
+    RecyclerView mRecyclerView;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -62,38 +72,33 @@ public class DetailActivity extends AppCompatActivity {
         intent.putExtra(MediaStore.EXTRA_OUTPUT, fileUri);
 
         ButterKnife.bind(this);
-//
-//        articleContent = (WebView) findViewById(R.id.formula_page);
-//        articleContent.getSettings().setJavaScriptEnabled(true);
-//        articleContent.getSettings().setBuiltInZoomControls(true);
-//        articleContent.loadUrl("file:///android_asset/testfile.html");
 
-        double[][] randomMatrix = new double[2][2];
-        for (int i = 0; i < 2; i++) {
-            for (int j = 0; j < 2; j++) {
-                randomMatrix[i][j] = (int) (Math.random()*10);
+        double[][] array = new double[][] {{1, 0, 0}, {0, 1, 0}, {0, 0, 1}};
+        DoubleMatrix matrix = new DoubleMatrix(array);
+        showMatrix(matrix);
+
+        mDetails = MatrixHelper.getDetails(matrix);
+        mAdapter = new DetailRecyclerViewAdapter(mDetails, new DetailRecyclerViewAdapter.DetailRowOnClickListener() {
+            @Override
+            public void onDetailRowClick(Detail detail) {
+            // toast
             }
-        }
-        showMatrix(randomMatrix);
-    }
+        });
 
-    public void showMatrix(double[][] matrix) {
-        WebSettings webSettings = mWebView.getSettings();
-        webSettings.setJavaScriptEnabled(true);
-        String path = "file:///android_asset/";
-        String js = "<html><head>"
-                + "<link rel='stylesheet' href='"+path+"jqmath-0.4.3.css'>"
-                + "<script src='"+path+"jquery-1.4.3.min.js'></script>"
-                + "<script src='"+path+"jqmath-etc-0.4.3.min.js'></script>"
-                + "</head><body>"
-                + "$$(\\table " + matrix[0][0] + ", " + matrix[0][1] + "; " + matrix[1][0] + + matrix[1][1] + ", 0)$$</body></html>";
-        //
-        mWebView.loadDataWithBaseURL(path, js, "text/html",  "UTF-8", null);
+        mRecyclerView.setLayoutManager(new LinearLayoutManager(this));
+        mRecyclerView.setAdapter(mAdapter);
     }
 
     @OnClick(R.id.activity_camera_icon)
     public void cameraButtonClicked() {
         startActivityForResult(intent, CAPTURE_IMAGE_ACTIVITY_REQUEST_CODE);
+    }
+
+    public void showMatrix(DoubleMatrix matrix) {
+        WebSettings webSettings = mWebView.getSettings();
+        webSettings.setJavaScriptEnabled(true);
+        String js = MatrixFormatter.makeLatexString(MatrixFormatter.matrixToString(matrix));
+        mWebView.loadDataWithBaseURL("file:///android_asset/", js, "text/html", "UTF-8", null);
     }
 
     @Override
