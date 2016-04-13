@@ -1,13 +1,14 @@
 package com.mobiledev.topimpamatrix;
 
+import org.jblas.ComplexDouble;
 import org.jblas.ComplexDoubleMatrix;
-import org.jblas.DoubleMatrix;
 
 /**
  * Created by larspmayrand on 4/11/16.
  */
 public class MatrixFormatter {
 
+    /** For HTML string size, not LaTeX size (unfortunately). */
     public static String makeLatexString(int size, String string) {
         return  "<html><head>"
                 + "<link rel='stylesheet' href='file:///android_asset/jqmath-0.4.3.css'>"
@@ -26,14 +27,18 @@ public class MatrixFormatter {
                 + "$$" + string + "$$</body></html>";
     }
 
-    public static String matrixToString(DoubleMatrix matrix) {
+    public static String matrixToString(ComplexDoubleMatrix matrix) {
         String string = "(\\table ";
         for (int r = 0; r < matrix.rows; r++) {
             for (int c = 0; c < matrix.columns; c++) {
-                if (matrix.get(r, c) == (int) matrix.get(r, c)) {
-                    string += (int) matrix.get(r, c);
+                if (matrix.get(r, c).isReal()) {
+                    if (matrix.get(r, c).real() == (int) matrix.get(r, c).real()) {
+                        string += (int) matrix.get(r, c).real();
+                    } else {
+                        string += matrix.get(r, c).real();
+                    }
                 } else {
-                    string += matrix.get(r, c);
+                    string += matrix.get(r, c).toString();
                 }
                 if (c < matrix.columns - 1) {
                     string += ", ";
@@ -43,14 +48,22 @@ public class MatrixFormatter {
                 string += "; ";
             }
         }
-        return makeLatexString(string+")");
+        return string + ")";
     }
 
-    public static String complexMatrixToString(ComplexDoubleMatrix matrix) {
+    public static String matrixToLatex(ComplexDoubleMatrix matrix) {
         String string = "(\\table ";
         for (int r = 0; r < matrix.rows; r++) {
             for (int c = 0; c < matrix.columns; c++) {
-                string += matrix.get(r, c);
+                if (matrix.get(r, c).isReal()) {
+                    if (matrix.get(r, c).real() == (int) matrix.get(r, c).real()) {
+                        string += (int) matrix.get(r, c).real();
+                    } else {
+                        string += matrix.get(r, c).real();
+                    }
+                } else {
+                    string += matrix.get(r, c).toString();
+                }
                 if (c < matrix.columns - 1) {
                     string += ", ";
                 }
@@ -59,7 +72,20 @@ public class MatrixFormatter {
                 string += "; ";
             }
         }
-        return string+")";
+        return makeLatexString(6, string + ")");
+    }
+
+    public static String complexDoubleToString(ComplexDouble complexDouble) { // cuz jblas' SUCKS
+        String complexDoubleString = "";
+        if (complexDouble.isReal()) {
+            double newComplexDouble = complexDouble.real();
+            if (newComplexDouble != (int) newComplexDouble) {
+                return newComplexDouble + "";
+            } else {
+                return (int) newComplexDouble + "";
+            }
+        }
+        return complexDouble + "";
     }
 
 }

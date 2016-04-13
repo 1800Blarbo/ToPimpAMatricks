@@ -1,5 +1,6 @@
 package com.mobiledev.topimpamatrix;
 
+import android.app.Activity;
 import android.content.Intent;
 import android.graphics.Bitmap;
 import android.graphics.Matrix;
@@ -7,7 +8,6 @@ import android.net.Uri;
 import android.os.Bundle;
 import android.os.Environment;
 import android.provider.MediaStore;
-import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.util.Log;
@@ -16,7 +16,7 @@ import android.webkit.WebSettings;
 import android.webkit.WebView;
 import android.widget.ImageView;
 
-import org.jblas.DoubleMatrix;
+import org.jblas.ComplexDoubleMatrix;
 
 import java.io.File;
 import java.io.FileNotFoundException;
@@ -32,7 +32,7 @@ import butterknife.OnClick;
 /**
  * Created by tomas on 3/17/16.
  */
-public class DetailActivity extends AppCompatActivity {
+public class DetailActivity extends Activity {
 
     public static final String CALCULATOR_URL = "http://icons.iconarchive.com/icons/dtafalonso/android-lollipop/512/Calculator-icon.png";
     public static final String DEFAULT_MATRIX_URL = "http://ncalculators.com/images/formulas/2x2-matrix.png";
@@ -56,11 +56,11 @@ public class DetailActivity extends AppCompatActivity {
     @Bind(R.id.activity_main_camera_image)
     ImageView mCameraImage;
 
-    @Bind(R.id.web_view_math_test)
-    WebView mWebView;
-
     @Bind(R.id.detail_recycler)
     RecyclerView mRecyclerView;
+
+    @Bind(R.id.detail_activity_webview)
+    WebView mWebView;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -74,10 +74,9 @@ public class DetailActivity extends AppCompatActivity {
         ButterKnife.bind(this);
 
         double[][] array = new double[][] {{1, 2}, {3, 4}};
-        DoubleMatrix matrix = new DoubleMatrix(array);
-        showMatrix(matrix);
+        ComplexDoubleMatrix matrix = new ComplexDoubleMatrix(array);
 
-        mDetails = MatrixHelper.getDetails(matrix);
+        mDetails = MatrixRecylerViewHelper.getDetails(matrix);
         mAdapter = new DetailRecyclerViewAdapter(mDetails, new DetailRecyclerViewAdapter.DetailRowOnClickListener() {
             @Override
             public void onDetailRowClick(Detail detail) {
@@ -94,10 +93,10 @@ public class DetailActivity extends AppCompatActivity {
         startActivityForResult(intent, CAPTURE_IMAGE_ACTIVITY_REQUEST_CODE);
     }
 
-    public void showMatrix(DoubleMatrix matrix) {
+    public void showMatrix(ComplexDoubleMatrix matrix) {
         WebSettings webSettings = mWebView.getSettings();
         webSettings.setJavaScriptEnabled(true);
-        String js = MatrixFormatter.matrixToString(matrix);
+        String js = MatrixFormatter.matrixToLatex(matrix);
         mWebView.loadDataWithBaseURL("file:///android_asset/", js, "text/html", "UTF-8", null);
     }
 

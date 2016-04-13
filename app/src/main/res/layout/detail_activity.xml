@@ -14,15 +14,18 @@
         android:minHeight="?attr/actionBarSize"
         android:elevation="8dp">
 
+
         <LinearLayout
+            android:id="@+id/icon_bar"
             android:layout_width="match_parent"
-            android:layout_height="match_parent">
+            android:layout_height="wrap_content"
+            >
 
             <ImageButton
                 android:id="@+id/activity_camera_icon"
                 android:layout_weight="1"
                 android:layout_width="match_parent"
-                android:layout_height="match_parent"
+                android:layout_height="wrap_content"
                 android:src="@android:drawable/ic_menu_camera"
                 />
 
@@ -30,23 +33,98 @@
                 android:id="@+id/activity_keyboard_icon"
                 android:layout_weight="1"
                 android:layout_width="match_parent"
-                android:layout_height="match_parent" />
+                android:layout_height="match_parent"
+                android:src="@drawable/ic_keyboard"/>
 
             <ImageButton
                 android:id="@+id/activity_calculator_icon"
                 android:layout_weight="1"
                 android:layout_width="match_parent"
-                android:layout_height="match_parent" />
+                android:layout_height="match_parent"
+                android:src="@drawable/ic_calc_icon"/>
 
         </LinearLayout>
 
     </android.support.v7.widget.Toolbar>
 
+    <FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
+        android:id="@+id/detail_activity_frame_layout"
+        android:layout_width="match_parent"
+        android:layout_height="130dp"
+        android:layout_below="@+id/activity_detail_toolbar">
+
+        <WebView
+            android:id="@+id/detail_activity_webview"
+            android:layout_width="match_parent"
+            android:layout_height="130dp"
+            android:textSize="14sp"
+            android:scrollbars="none"
+            />
+
+        <GridLayout xmlns:android="http://schemas.android.com/apk/res/android"
+            xmlns:tools="http://schemas.android.com/tools"
+            android:id="@+id/grid_layout"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+
+            android:columnCount="2"
+            android:rowCount="2"
+            tools:context=".GridXMLActivity"
+            android:layout_gravity="center_horizontal"
+            android:orientation="horizontal">
+
+            <Button
+                android:id="@+id/button1"
+                android:layout_gravity="start|top"
+                android:textSize="50sp"
+                android:background="@android:color/transparent"
+                android:paddingTop="3dp"
+                android:paddingBottom="3dp"
+                android:paddingEnd="17dp"
+                android:paddingStart="17dp"
+                />
+
+            <Button
+                android:id="@+id/button2"
+                android:layout_gravity="start|top"
+                android:textSize="50sp"
+                android:background="@android:color/transparent"
+                android:paddingTop="3dp"
+                android:paddingBottom="3dp"
+                android:paddingEnd="17dp"
+                android:paddingStart="17dp"
+                />
+
+            <Button
+                android:id="@+id/button3"
+                android:layout_gravity="start|top"
+                android:textSize="50sp"
+                android:background="@android:color/transparent"
+                android:paddingTop="3dp"
+                android:paddingBottom="3dp"
+                android:paddingEnd="17dp"
+                android:paddingStart="17dp"
+                />
+
+            <Button
+                android:id="@+id/button4"
+                android:layout_gravity="start|top"
+                android:textSize="50sp"
+                android:background="@android:color/transparent"
+                android:paddingTop="3dp"
+                android:paddingBottom="3dp"
+                android:paddingEnd="17dp"
+                android:paddingStart="17dp"
+                />
+
+        </GridLayout>
+    </FrameLayout>
+
     <LinearLayout
         android:id="@+id/linear_layout"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:layout_below="@+id/activity_detail_toolbar"
+        android:layout_below="@+id/detail_activity_frame_layout"
         android:orientation="vertical"
         android:paddingTop="8dp">
 
@@ -58,14 +136,6 @@
             android:contentDescription="@string/activity_main_imageView_description"
             android:paddingBottom="4dp"
             tools:background="@android:color/holo_blue_light" />
-
-        <WebView
-            android:id="@+id/web_view_math_test"
-            android:layout_width="match_parent"
-            android:layout_height="0dp"
-            android:layout_weight=".3"
-            android:textSize="14sp"
-            android:scrollbars="none" />
 
         <android.support.v7.widget.RecyclerView
             android:id="@+id/detail_recycler"
